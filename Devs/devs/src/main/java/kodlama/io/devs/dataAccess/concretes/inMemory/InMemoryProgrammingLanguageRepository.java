@@ -14,7 +14,7 @@ public class InMemoryProgrammingLanguageRepository implements ProgrammingLanguag
 
 	private boolean result;
 	private InMemoryDb db = new InMemoryDb();
-	
+
 	@Override
 	public boolean add(ProgrammingLanguage programmingLanguage) {
 		result = db.programmingLanguages.add(programmingLanguage);
@@ -26,38 +26,42 @@ public class InMemoryProgrammingLanguageRepository implements ProgrammingLanguag
 
 	@Override
 	public boolean update(int id, ProgrammingLanguage programmingLanguage) {
-		
-		ProgrammingLanguage language = getProgrammingLanguageById(id);
-		db.programmingLanguages.indexOf(language);
-		
-		ProgrammingLanguage pl = new InMemoryDb().programmingLanguages.get(id);
-		pl = new InMemoryDb().programmingLanguages.set(id, programmingLanguage);
-		if (pl == programmingLanguage) {
-			return true;
+		// ***** UPDATE OPERASYONUNU KONTROL ET TEKRAR *****
+		db.programmingLanguages.forEach(p -> System.out.println(p.getLanguageName()));
+
+		for (ProgrammingLanguage _programmingLanguage : db.programmingLanguages) {
+			if (_programmingLanguage.getId() == id) {
+				int index = db.programmingLanguages.indexOf(_programmingLanguage);
+				db.programmingLanguages.set(index, programmingLanguage);
+			}
 		}
-		return false;
+		db.programmingLanguages.forEach(p -> System.out.println(p.getId() + " - " + p.getLanguageName()));
+		return true;
 	}
 
 	@Override
 	public boolean delete(int id) {
-		// liste indexini aldım ama düzelteceğim. 
-		for (ProgrammingLanguage programmingLanguage : db.programmingLanguages) {
-			int indeks = db.programmingLanguages.indexOf(programmingLanguage);
-			if (programmingLanguage.getId()==id) {
-				System.out.println(indeks);
-				db.programmingLanguages.remove(indeks);
+		for (ProgrammingLanguage _programmingLanguage : db.programmingLanguages) {
+			if (_programmingLanguage.getId() == id) {
+				int index = db.programmingLanguages.indexOf(_programmingLanguage);
+				db.programmingLanguages.remove(index);
+				db.programmingLanguages.forEach(i -> System.out.println(i.getLanguageName()));
+				return true;
 			}
+			result = false;
 		}
 		if (result == true) {
 			return true;
+		} else {
+			System.out.println("Inmemory de bu ID ile kayıtlı dil yok...");
+			return false;
 		}
-		return false;
 	}
 
 	@Override
 	public ProgrammingLanguage getProgrammingLanguageById(int id) {
 		for (ProgrammingLanguage programmingLanguage : db.programmingLanguages) {
-			if (programmingLanguage.getId()==id) {
+			if (programmingLanguage.getId() == id) {
 				return programmingLanguage;
 			}
 		}
